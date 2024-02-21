@@ -190,7 +190,7 @@ cdef class DHT_BASE:
         self.myid = ID(id)
 
         # initialize the scheduler
-        self._scheduler = utils.Scheduler() if scheduler is None else scheduler
+        self._scheduler = Scheduler() if scheduler is None else scheduler #self._scheduler = utils.Scheduler() if scheduler is None else scheduler
 
         # initialising the routing table
         if routing_table is None:
