@@ -41,8 +41,8 @@ except ImportError:
 import datrie
 
 #import utils
-#from .utils cimport ID, nbit, nflip, nset, PollableQueue, Scheduler, id_to_longid, ip_in_nets
-cimport .utils
+#from .utils import ID, nbit, nflip, nset, PollableQueue, Scheduler, id_to_longid, ip_in_nets
+import .utils
 from .exceptions import BucketFull, BucketNotFull, NoTokenError, FailToStop, TransactionIdUnknown
 from .exceptions import NotFound
 
