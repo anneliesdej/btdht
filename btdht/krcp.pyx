@@ -19,7 +19,7 @@ from cython.parallel import prange
 
 import six
 
-import utils
+from .utils import *
 from .exceptions import MissingT, DecodeError
 
 cdef int str_to_int(char* data, int len) nogil:
@@ -395,7 +395,7 @@ class BError(Exception):
             :return: The bencoded error message ready to be send
             :rtype: bytes
         """
-        return utils.bencode({b"y":self.y, b"t":self.t, b"e":self.e})
+        return bencode({b"y":self.y, b"t":self.t, b"e":self.e})
 
     def __str__(self):
         raise NotImplementedError()
