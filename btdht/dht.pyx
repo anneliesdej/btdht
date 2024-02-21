@@ -819,7 +819,10 @@ cdef class DHT_BASE:
             ("dht.transmissionbt.com", 6881),
             ("router.bittorrent.com", 6881),
             ("dht.aelitis.com", 6881),
-            ("dht.libtorrent.org", 25401)
+            ("dht.libtorrent.org", 25401),
+            ("67.215.246.10", 6881),  # router.bittorrent.com
+            ("82.221.103.244", 6881),  # router.utorrent.com
+            ("87.98.162.88", 6881)  # dht.transmissionbt.com
         ]
     ):
         """
