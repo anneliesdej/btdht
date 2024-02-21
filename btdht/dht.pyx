@@ -544,7 +544,7 @@ cdef class DHT_BASE:
             Note:
                 The peer address is store 30 minutes
         """
-        if ip not in self.ignored_ip and not utils.ip_in_nets(ip, self.ignored_net):
+        if ip not in self.ignored_ip and not ip_in_nets(ip, self.ignored_net):
             self._peers[info_hash][(ip,port)]=time.time()
             # we only keep at most 100 peers per hash
             if len(self._peers[info_hash]) > 100:
@@ -564,7 +564,7 @@ cdef class DHT_BASE:
         if (
             port > 0 and
             ip not in self.ignored_ip and
-            not utils.ip_in_nets(ip, self.ignored_net)
+            not ip_in_nets(ip, self.ignored_net)
         ):
             self._got_peers[info_hash][(ip,port)]=time.time()
             # we only keep at most 1000 peers per hash
@@ -921,7 +921,7 @@ cdef class DHT_BASE:
             data, addr = self.sock.recvfrom(4048)
             if addr[0] in self.ignored_ip:
                 return
-            elif utils.ip_in_nets(addr[0], self.ignored_net):
+            elif ip_in_nets(addr[0], self.ignored_net):
                 return
             elif addr[1] < 1 or addr[1] > 65535:
                 self.debug(1, "Port should be whithin 1 and 65535, not %s" % addr[1])
@@ -2092,7 +2092,7 @@ class Bucket(list):
         return Bucket(id=self.id, id_length=self.id_length - 1, init=l)
 
     def __hash__(self):
-        return hash(utils.id_to_longid(ID.to_bytes(self.id))[:self.id_length])
+        return hash(id_to_longid(ID.to_bytes(self.id))[:self.id_length])
 
     def __eq__(self, other):
         try:
@@ -2292,7 +2292,7 @@ class RoutingTable(object):
             self._info_hash.remove(id)
             if not id in self._split_ids:
                 try:
-                    key = self.trie.longest_prefix(utils.id_to_longid(ID.to_bytes(id)))
+                    key = self.trie.longest_prefix(id_to_longid(ID.to_bytes(id)))
                     #self._to_merge.add(key)
                 except KeyError:
                     pass
@@ -2503,7 +2503,7 @@ class RoutingTable(object):
                 handling ``id`` will be returned.
         """
         try:
-            return self.trie.longest_prefix_value(utils.id_to_longid(ID.to_bytes(id)))
+            return self.trie.longest_prefix_value(id_to_longid(ID.to_bytes(id)))
         except KeyError as e:
             if errno > 0:
                 print("%r:%r" % (id,e))
@@ -2532,7 +2532,7 @@ class RoutingTable(object):
             id = ID(id)
             nodes = set(n for n in self.find(id) if not n.bad)
             try:
-                prefix = self.trie.longest_prefix(utils.id_to_longid(id.value))
+                prefix = self.trie.longest_prefix(id_to_longid(id.value))
             except KeyError:
                 prefix = u""
             while len(nodes) < Bucket.max_size and prefix:
@@ -2561,7 +2561,7 @@ class RoutingTable(object):
         """
         if node.ip in dht.ignored_ip:
             return
-        if utils.ip_in_nets(node.ip, dht.ignored_net):
+        if ip_in_nets(node.ip, dht.ignored_net):
             return
         b = self.find(node.id)
         try:
@@ -2595,7 +2595,7 @@ class RoutingTable(object):
                 the routing table cover the entire 160bits space
         """
         try:
-            prefix = utils.id_to_longid(bucket.id)[:bucket.id_length]
+            prefix = id_to_longid(bucket.id)[:bucket.id_length]
             (zero_b, one_b) = self.trie[prefix].split(self, dht)
             (zero_b, one_b) = self.trie[prefix].split(self, dht)
             self.trie[prefix + u"1"] = one_b
@@ -2640,7 +2640,7 @@ class RoutingTable(object):
                 continue
             to_merge =  True
             for id in self._split_ids | self._info_hash:
-                if utils.id_to_longid(id).startswith(key[:-1]):
+                if id_to_longid(id).startswith(key[:-1]):
                     to_merge = False
                     break
             j += 1
